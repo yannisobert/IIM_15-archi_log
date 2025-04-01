@@ -1,0 +1,15 @@
+datasource db {
+  provider = "postgresql" // ou "mysql", "sqlite", selon ta base de données
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Poop {
+  id       String   @id @default(cuid())
+  location String
+  date     DateTime
+  user     String
+}
