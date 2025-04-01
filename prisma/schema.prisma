@@ -7,9 +7,9 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Poop {
+model Pee {
   id       String   @id @default(cuid())
-  location String
+  location Json
   date     DateTime
   user     String
 }
