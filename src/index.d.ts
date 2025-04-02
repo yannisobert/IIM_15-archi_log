@@ -27,6 +27,7 @@ interface PeeData {
     };
     date: Date;
     user: string;
+    description?: string;
 }
 
 interface MapPinProps {
@@ -36,4 +37,9 @@ interface MapPinProps {
 interface ListViewProps {
     locations: Location[]
     onSelectLocation?: (location: Location) => void
+}
+
+interface AddPeeButtonProps {
+    onAddPee?: (pee: Omit<Location, "id">) => void
+    className?: string
 }

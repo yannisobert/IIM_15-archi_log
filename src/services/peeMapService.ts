@@ -12,3 +12,8 @@ export const generatePeeData = (): PeeData[] => {
         user: faker.person.fullName(),
     }));
 };
+
+
+// export const addPee = (pee: Omit<PeeData, "id">): PeeData => {
+//
+// }
