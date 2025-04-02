@@ -17,7 +17,7 @@ export default function Register() {
         });
 
         if (res.ok) {
-            router.push('/auth/login');
+            await router.push('/auth/login');
         } else {
             const data = await res.json();
             setError(data.message);
