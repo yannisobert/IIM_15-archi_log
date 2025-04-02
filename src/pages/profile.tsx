@@ -1,52 +1,59 @@
-import { useEffect, useState } from 'react';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 
-const Profile = () => {
-    const [userData, setUserData] = useState(null);
+const Profile = ({ userData }) => {
     const router = useRouter();
 
-    useEffect(() => {
-        // Vérifier la présence du token (ici, on assume que le token est dans les cookies)
-        const token = document.cookie.split('; ').find(row => row.startsWith('token='));
-
-        console.log('token')
-        console.log(token)
-        if (!token) {
-            // Si pas de token, rediriger vers la page de login
-//            router.push('/auth/login');
-            return;
-        }
-
-        // Sinon, appeler l'API pour récupérer les informations de l'utilisateur avec le token
-        const fetchUserData = async () => {
-            const res = await fetch('/api/user', {
-                headers: {
-                    'Authorization': `Bearer ${token.split('=')[1]}`,  // Extraire le token du cookie
-                },
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                setUserData(data);
-            } else {
-                router.push('/auth/login'); // Si la récupération des données échoue, rediriger vers login
-            }
-        };
-
-        fetchUserData();
-    }, [router]);
-
     if (!userData) {
-        return <p>Chargement...</p>;  // Afficher un message de chargement si les données ne sont pas encore récupérées
+        router.push('/auth/login');
+        return null;
     }
 
     return (
         <div>
             <h1>Profil de l'utilisateur</h1>
             <p>Nom d'utilisateur: {userData.username}</p>
-            {/* Ajoute d'autres informations utilisateur ici */}
+            {/* Affiche d'autres informations utilisateur ici */}
         </div>
     );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const token = context.req.cookies.token;
+
+    if (!token) {
+        return {
+            redirect: {
+                destination: '/auth/login',
+                permanent: false,
+            },
+        };
+    }
+
+    try {
+        const res = await fetch('http://localhost:3000/api/user', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!res.ok) {
+            throw new Error('Utilisateur non trouvé');
+        }
+
+        const userData = await res.json();
+
+        return {
+            props: { userData },
+        };
+    } catch (error) {
+        return {
+            redirect: {
+                destination: '/auth/login',
+                permanent: false,
+            },
+        };
+    }
 };
 
 export default Profile;
