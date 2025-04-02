@@ -16,6 +16,7 @@ interface MapViewProps {
     locations: Location[]
     initialZoom?: number
     initialCenter?: [number, number]
+    selectedLocation?: Location | null
 }
 
 interface PeeData {

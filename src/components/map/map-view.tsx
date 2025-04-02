@@ -1,16 +1,35 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { MapContainer, TileLayer } from "react-leaflet"
+import {useEffect, useState, useRef} from "react"
+import {MapContainer, TileLayer, useMap} from "react-leaflet"
 import MapPin from "@/components/map/map-pin"
 import {MapViewProps} from "@/index";
 
 import "leaflet/dist/leaflet.css"
 
+function MapController({center, zoom}: { center: [number, number]; zoom: number }) {
+    const map = useMap()
+
+    useEffect(() => {
+        map.setView(center, zoom)
+    }, [center, zoom, map])
+
+    return null
+}
 
 
-export default function MapView({ locations, initialZoom = 13, initialCenter = [51.505, -0.09] }: MapViewProps) {
+export default function MapView({
+        locations,
+        initialZoom = 13,
+        initialCenter = [51.505, -0.09],
+        selectedLocation = null,
+    }: MapViewProps) {
     const [isMounted, setIsMounted] = useState(false)
+    const mapRef = useRef(null)
+
+    const center = selectedLocation ? ([selectedLocation.lat, selectedLocation.lng] as [number, number]) : initialCenter
+
+    const zoom = selectedLocation ? 15 : initialZoom
 
     useEffect(() => {
         setIsMounted(true)
@@ -30,7 +49,9 @@ export default function MapView({ locations, initialZoom = 13, initialCenter = [
             zoom={initialZoom}
             scrollWheelZoom={true}
             style={{ height: "100%", width: "100%" }}
+            ref={mapRef}
         >
+            <MapController center={center} zoom={zoom} />
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -42,4 +63,3 @@ export default function MapView({ locations, initialZoom = 13, initialCenter = [
         </MapContainer>
     )
 }
-

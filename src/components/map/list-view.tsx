@@ -1,6 +1,6 @@
 "use client"
-import { MapPin } from "lucide-react"
 import {ListViewProps} from "@/index";
+import Image from "next/image"
 
 export default function ListView({ locations, onSelectLocation }: ListViewProps) {
     return (
@@ -14,7 +14,13 @@ export default function ListView({ locations, onSelectLocation }: ListViewProps)
                     >
                         <div className="flex items-start gap-3">
                             <div className="mt-0.5 text-primary">
-                                <MapPin size={20} />
+                                <Image
+                                    src="/logo.svg"
+                                    alt="Location Icon"
+                                    width={50}
+                                    height={50}
+                                    className="w-12 h-12 rounded-full"
+                                />
                             </div>
                             <div className="flex-1">
                                 <h3 className="font-medium text-gray-900">{location.name}</h3>

@@ -11,7 +11,6 @@ const icon = new L.Icon({
 })
 
 export default function MapPin({ location }: MapPinProps) {
-
     return (
         <Marker
             position={[location.lat, location.lng]}
@@ -29,4 +28,3 @@ export default function MapPin({ location }: MapPinProps) {
         </Marker>
     )
 }
-

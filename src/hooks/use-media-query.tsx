@@ -4,26 +4,35 @@ import { useState, useEffect } from "react"
 
 export function useMediaQuery(query: string): boolean {
     const [matches, setMatches] = useState(false)
+    const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
-        const media = window.matchMedia(query)
+        setMounted(true)
 
-        // Update the state with the current value
-        const updateMatches = () => {
-            setMatches(media.matches)
-        }
+        // Only run on the client side
+        if (typeof window !== "undefined") {
+            const media = window.matchMedia(query)
 
-        // Set the initial value
-        updateMatches()
+            // Update the state with the current value
+            const updateMatches = () => {
+                setMatches(media.matches)
+            }
 
-        // Add the change listener
-        media.addEventListener("change", updateMatches)
+            // Set the initial value
+            updateMatches()
 
-        // Clean up
-        return () => {
-            media.removeEventListener("change", updateMatches)
+            // Add the change listener
+            media.addEventListener("change", updateMatches)
+
+            // Clean up
+            return () => {
+                media.removeEventListener("change", updateMatches)
+            }
         }
     }, [query])
+
+    // While not mounted (during SSR), return false
+    if (!mounted) return false
 
     return matches
 }
