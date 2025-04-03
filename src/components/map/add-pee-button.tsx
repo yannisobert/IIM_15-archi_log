@@ -42,7 +42,7 @@ export default function AddPeeButton({className = "" }: AddPeeButtonProps) {
                         latitude: parseFloat(newPee.lat),
                         longitude: parseFloat(newPee.lng),
                     },
-                    user: 'testUser',
+                    user: newPee.name,
                 }),
             });
 

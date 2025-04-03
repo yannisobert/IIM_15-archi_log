@@ -20,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             return res.status(404).json({ message: 'Utilisateur non trouvé' });
         }
 
+
         res.status(200).json({ username: user.username });
     } catch (error) {
         res.status(401).json({ message: 'Token invalide ou expiré' });

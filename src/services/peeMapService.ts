@@ -14,7 +14,6 @@ export const generatePeeData = (): PeeData[] => {
     }));
 };
 
-
 export const addPee = async (pee:
 {
     location: {
