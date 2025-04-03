@@ -23,10 +23,9 @@ export default function ListView({ locations, onSelectLocation }: ListViewProps)
                                 />
                             </div>
                             <div className="flex-1">
-                                <h3 className="font-medium text-gray-900">{location.name}</h3>
-                                <p className="text-sm text-gray-500 mt-1">{location.description}</p>
+                                <h3 className="font-medium text-gray-900">{location.user}</h3>
                                 <div className="text-xs text-gray-400 mt-2">
-                                    Coordinates: {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
+                                    Coordinates: {location.location.latitude}, {location.location.longitude}
                                 </div>
                             </div>
                         </div>

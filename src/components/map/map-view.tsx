@@ -21,7 +21,7 @@ function MapController({center, zoom}: { center: [number, number]; zoom: number 
 export default function MapView({
         locations,
         initialZoom = 13,
-        initialCenter = [51.505, -0.09],
+        initialCenter = [48.866667,  2.333333],
         selectedLocation = null,
     }: MapViewProps) {
     const [isMounted, setIsMounted] = useState(false)

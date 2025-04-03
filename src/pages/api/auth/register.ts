@@ -16,6 +16,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         const { username, password } = registerSchema.parse(req.body);
 
+        if (password.length < 6 && username.length < 3) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters' });
+        }
+
         const existingUser = await prisma.user.findUnique({
             where: { username },
         });
