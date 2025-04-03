@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import dynamic from "next/dynamic"
 // This component will be rendered on the client side
 const MapContent = dynamic(() => import("@/components/map/map-view"), { ssr: false })
@@ -21,7 +21,10 @@ export default function PeeMap() {
     const isMobile = useMediaQuery("(max-width: 768px)")
 
     const handleLocationSelect = (location: Location) => {
-        setSelectedLocation(location)
+        setSelectedLocation({
+            lat: location.location.latitude,
+            lng: location.location.longitude,
+        })
         // On mobile, switch to map view when a location is selected
         if (isMobile) {
             setCurrentView("map")
@@ -30,45 +33,35 @@ export default function PeeMap() {
 
     // Sample location data - you can replace this with your actual data
     const [locations, setLocations] = useState<Location[]>([
-        {
-            id: 1,
-            name: "Point A",
-            lat: 51.505,
-            lng: -0.09,
-            description: "This is point A with some details about the location.",
-        },
-        {
-            id: 2,
-            name: "Point B",
-            lat: 51.51,
-            lng: -0.1,
-            description: "This is point B with information about what can be found here.",
-        },
-        {
-            id: 3,
-            name: "Point C",
-            lat: 51.515,
-            lng: -0.08,
-            description: "This is point C with a description of this interesting place.",
-        },
-        { id: 4, name: "Point D", lat: 51.52, lng: -0.12, description: "This is point D, a notable landmark in the area." },
-        {
-            id: 5,
-            name: "Point E",
-            lat: 51.498,
-            lng: -0.05,
-            description: "This is point E, worth visiting for its unique features.",
-        },
+
     ])
 
-    const handleAddPee = (newPin: Omit<Location, "id">) => {
+
+    useEffect(() => {
+        // Fetch locations from the server or database
+        const fetchLocations = async () => {
+            try {
+                const response = await fetch("/api/pee")
+                const data = await response.json()
+                setLocations(data)
+            } catch (error) {
+                console.error("Error fetching locations:", error)
+            }
+        }
+
+        fetchLocations()
+    }, [])
+
+
+
+    const handleAddPee = (newPee: Omit<Location, "id">) => {
         // Generate a new ID (in a real app with Prisma, this would be handled by the database)
         const newId = Math.max(0, ...locations.map((loc) => loc.id)) + 1
 
         // Add the new pin to the locations array
         const newLocation: Location = {
             id: newId,
-            ...newPin,
+            ...newPee,
         }
 
         setLocations((prev) => [...prev, newLocation])

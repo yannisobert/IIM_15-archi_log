@@ -9,7 +9,6 @@ export interface Location {
     name: string
     lat: number
     lng: number
-    description: string
 }
 
 interface MapViewProps {
@@ -27,7 +26,6 @@ interface PeeData {
     };
     date: Date;
     user: string;
-    description?: string;
 }
 
 interface MapPinProps {

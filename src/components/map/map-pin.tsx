@@ -11,17 +11,17 @@ const icon = new L.Icon({
 })
 
 export default function MapPin({ location }: MapPinProps) {
+    console.log("MapPin", location)
     return (
         <Marker
-            position={[location.lat, location.lng]}
+            position={[location.location.latitude, location.location.longitude]}
             icon={icon}
         >
             <Popup>
                 <div className="p-1">
-                    <h3 className="font-bold text-lg">{location.name}</h3>
-                    <p className="text-sm text-gray-600">{location.description}</p>
+                    <h3 className="font-bold text-lg">{location.user}</h3>
                     <div className="text-xs text-gray-500 mt-2">
-                        Coordinates: {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
+                        Coordinates: {location.location.latitude}, {location.location.longitude}
                     </div>
                 </div>
             </Popup>

@@ -8,14 +8,14 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import {AddPeeButtonProps} from "@/index"
 
-export default function AddPeeButton({ onAddPee, className = "" }: AddPeeButtonProps) {
+
+export default function AddPeeButton({className = "" }: AddPeeButtonProps) {
     const [isOpen, setIsOpen] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [newPee, setNewPee] = useState({
         name: "",
-        description: "",
         lat: "",
         lng: "",
     })
@@ -25,29 +25,45 @@ export default function AddPeeButton({ onAddPee, className = "" }: AddPeeButtonP
         setNewPee((prev) => ({ ...prev, [name]: value }))
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setIsLoading(true)
 
-        // Basic validation
         if (!newPee.name || !newPee.lat || !newPee.lng) {
             return
         }
 
-        // Convert lat/lng to numbers
-        const pin = {
-            name: newPee.name,
-            description: newPee.description,
-            lat: Number.parseFloat(newPee.lat),
-            lng: Number.parseFloat(newPee.lng),
+        try {
+            const res = await fetch('/api/pee/new', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    location: {
+                        latitude: parseFloat(newPee.lat),
+                        longitude: parseFloat(newPee.lng),
+                    },
+                    user: 'testUser',
+                }),
+            });
+
+            if (!res.ok) {
+                throw new Error('Failed to add pee');
+            }
+
+            const getNewPee = await res.json();
+            console.log("New pee added:", getNewPee);
+
+        } catch (error) {
+            console.error("Error adding pee:", error)
+        } finally {
+            setIsLoading(false)
         }
 
-        // Call the onAddPin callback
-        onAddPee?.(pin)
-
         // Reset form and close dialog
-        setNewPee({ name: "", description: "", lat: "", lng: "" })
+        setNewPee({ name: "", lat: "", lng: "" })
         setIsOpen(false)
     }
+
 
     return (
         <>
@@ -58,7 +74,7 @@ export default function AddPeeButton({ onAddPee, className = "" }: AddPeeButtonP
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogHeader>
-                        <DialogTitle>Add New Pin</DialogTitle>
+                        <DialogTitle>Add New Pee</DialogTitle>
                     </DialogHeader>
                     <form onSubmit={handleSubmit}>
                         <div className="grid gap-4 py-4">
@@ -69,19 +85,8 @@ export default function AddPeeButton({ onAddPee, className = "" }: AddPeeButtonP
                                     name="name"
                                     value={newPee.name}
                                     onChange={handleChange}
-                                    placeholder="Enter pin name"
+                                    placeholder="Enter pee name"
                                     required
-                                />
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="description">Description</Label>
-                                <Textarea
-                                    id="description"
-                                    name="description"
-                                    value={newPee.description}
-                                    onChange={handleChange}
-                                    placeholder="Enter pin description"
-                                    rows={3}
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
