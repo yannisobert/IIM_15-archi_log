@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import Image from "next/image";
+import {redirect} from "next/navigation";
 
 export default function HeaderLanding() {
     return (
@@ -32,10 +33,10 @@ export default function HeaderLanding() {
                     </Link>
                 </nav>
                 <div className="hidden md:flex items-center gap-4">
-                    <Button size="sm" className="hidden md:inline-flex" variant="outline">
+                    <Button size="sm" className="hidden md:inline-flex" variant="outline" onClick={() => redirect("/auth/login")}>
                         Log In
                     </Button>
-                    <Button size="sm" className="hidden md:inline-flex">
+                    <Button size="sm" className="hidden md:inline-flex" onClick={() => redirect("/auth/register")}>
                         Sign Up
                     </Button>
                 </div>
